@@ -8,9 +8,9 @@ export function Signup() {
       <SignupForm />
       <br />
       <span className='text-sm font-medium text-gray-900'>
-        I already have an account (
+        Am deja un cont (
         <Link to='/login' className='underline'>
-          go to login
+          mergi către login
         </Link>
         ).
       </span>

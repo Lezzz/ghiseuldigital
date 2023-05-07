@@ -37,14 +37,14 @@ export default function CheckoutPage({ user }: { user: User }) {
         <div className='bg-white py-8 px-4 shadow-xl ring-1 ring-gray-900/10 sm:rounded-lg sm:px-10'>
           <h1>
             {hasPaid === 'paid'
-              ? '🥳 Payment Successful!'
+              ? '🥳 Plata procesată cu succes!'
               : hasPaid === 'canceled'
-              ? '😢 Payment Canceled'
-              : hasPaid === 'error' && '🙄 Payment Error'}
+              ? '😢 Plata anulată'
+              : hasPaid === 'error' && '🙄 Eroare la plată'}
           </h1>
           {hasPaid !== 'loading' && (
             <span className='text-center'>
-              You are being redirected to your account page... <br />
+              Sunteți redirecționat către pagina Cont... <br />
             </span>
           )}
         </div>

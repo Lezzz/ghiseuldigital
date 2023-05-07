@@ -48,20 +48,20 @@ export default function GptPage() {
             <div className='space-y-6 sm:w-[90%] md:w-[60%] mx-auto border-b border-gray-900/10 px-6 pb-12'>
               <div className='col-span-full'>
                 <label htmlFor='instructions' className='block text-sm font-medium leading-6 text-gray-900'>
-                  Instructions -- How should GPT behave?
+                  Instrucțiuni -- Cum ai vrea să se comporte?
                 </label>
                 <div className='mt-2'>
                   <textarea
                     id='instructions'
-                    placeholder='You are a career advice assistant. You are given a prompt and you must respond with of career advice and 10 actionable items.'
+                    placeholder='Vreau să te comporți ca un funcționar public și să mă îndrumi.'
                     rows={3}
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
                     {...register('instructions', {
-                      required: 'This is required',
+                      required: 'Completează aici',
                       minLength: {
                         value: 5,
-                        message: 'Minimum length should be 5',
+                        message: 'Minim 5 caractere',
                       },
                     })}
                   />
@@ -72,20 +72,20 @@ export default function GptPage() {
               </div>
               <div className='col-span-full'>
                 <label htmlFor='command' className='block text-sm font-medium leading-6 text-gray-900'>
-                  Command -- What should GPT do?
+                  Comandă -- Ce ai vrea să facă?
                 </label>
                 <div className='mt-2'>
                   <textarea
                     id='command'
-                    placeholder='How should I prepare for opening my own speciatly-coffee shop?'
+                    placeholder='Ce acte am nevoie pentru a obține un buletin în Brașov?'
                     rows={3}
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
                     {...register('command', {
-                      required: 'This is required',
+                      required: 'Completează aici',
                       minLength: {
                         value: 5,
-                        message: 'Minimum length should be 5',
+                        message: 'Minim 5 caractere',
                       },
                     })}
                   />
@@ -95,7 +95,7 @@ export default function GptPage() {
 
               <div className='h-10 '>
                 <label htmlFor='temperature' className='w-full text-gray-700 text-sm font-semibold'>
-                  Temperature Input -- Controls How Random GPT's Output is
+                  Randomness
                 </label>
                 <div className='w-32 mt-2'>
                   <div className='flex flex-row h-10 w-full rounded-lg relative rounded-md border-0 ring-1 ring-inset ring-gray-300 bg-transparent mt-1'>
@@ -123,9 +123,9 @@ export default function GptPage() {
                 type='submit'
                 className={`${
                   isSubmitting && 'animate-puls'
-                } rounded-md bg-yellow-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-yellow-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+                } rounded-md bg-blue-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
               >
-                {!isSubmitting ? 'Submit' : 'Loading...'}
+                {!isSubmitting ? 'Întreabă' : 'Loading...'}
               </button>
             </div>
           </form>
@@ -135,7 +135,7 @@ export default function GptPage() {
             } mt-2 mx-6 flex justify-center rounded-lg border border-dashed border-gray-900/25 mt-10 sm:w-[90%] md:w-[50%] mx-auto mt-12 px-6 py-10`}
           >
             <div className='space-y-2 text-center'>
-              <p className='text-sm text-gray-500'>{response ? response : 'GPT Response will load here'}</p>
+              <p className='text-sm text-gray-500'>{response ? response : 'Răspunsul se va încărca aici.'}</p>
             </div>
           </div>
         </div>

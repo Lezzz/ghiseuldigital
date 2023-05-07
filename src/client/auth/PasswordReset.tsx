@@ -8,7 +8,7 @@ export function PasswordReset() {
       <ResetPasswordForm />
       <br />
       <span className='text-sm font-medium text-gray-900'>
-        If everything is okay, <Link to='/login'>go to login</Link>
+      Dacă totul este în regulă, <Link to='/login'>mergi către login.</Link>
       </span>
     </AuthWrapper>
   );

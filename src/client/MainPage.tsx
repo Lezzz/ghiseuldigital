@@ -5,43 +5,44 @@ export default function MainPage() {
         <div className='px-6 lg:px-0 lg:pt-4'>
           <div className='mx-auto max-w-2xl'>
             <div className='max-w-lg'>
-              <h1 className=' text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>SaaS Template</h1>
+              <h1 className=' text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>Ghișeul Digital</h1>
 
               <h2 className='ml-4 max-w-2xl text-2xl f tracking-tight text-gray-800 slg:col-span-2 xl:col-auto'>
-                for the PERN stack
+                Toolkit
               </h2>
               <h2 className='ml-4 max-w-2xl text-md f tracking-tight text-gray-600 slg:col-span-2 xl:col-auto'>
-                Postgres/Prisma, Express, React, Node
+                de navigat birocrația.
               </h2>
 
               <p className='mt-4 text-lg leading-8 text-gray-600'>
-                Hey 🧙‍♂️! This template will help you get a ghd up and running in no time. It's got:
+                Suntem aici să te ajutăm cu:
               </p>
               <ul className='list-disc ml-8 my-2 leading-8 text-gray-600'>
-                <li>Stripe integration</li>
-                <li>Authentication w/ Google</li>
-                <li>OpenAI GPT API configuration</li>
-                <li>Managed Server-Side Routes</li>
-                <li>Tailwind styling</li>
-                <li>Client-side Caching</li>
-                <li>
-                  One-command{' '}
-                  <a href='https://wasp-lang.dev/docs/deploying' className='underline' target='_blank'>
-                    Deploy 🚀
-                  </a>
-                </li>
+                <li>Generare cereri Legea 544/2001</li>
+                <li>Generare autorizații protest</li>
+                <li>Compunere mailuri</li>
               </ul>
               <p className='mt-4 text-lg leading-8 text-gray-600'>
-                Make sure to check out the <code>README.md</code> file and add your <code>env</code> variables before
-                you begin
+                Unele generări folosesc Inteligență Artificială.
               </p>
               <div className='mt-10 flex items-center gap-x-6'>
-                <span className='text-sm font-semibold leading-6 text-gray-900'>Made with Wasp &nbsp; {' = }'}</span>
                 <a
-                  href='https://wasp-lang.dev/docs'
-                  className='rounded-md bg-yellow-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-400 hover:text-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500'
+                  href='/'
+                  className='rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 hover:text-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500'
                 >
-                  Read the Wasp Docs
+                  Generator cererei 544
+                </a>
+                <a
+                  href='/'
+                  className='rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 hover:text-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500'
+                >
+                  Generator autorizație protest
+                </a>
+                <a
+                  href='/'
+                  className='rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 hover:text-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500'
+                >
+                  Generator mailuri
                 </a>
               </div>
             </div>
@@ -49,9 +50,9 @@ export default function MainPage() {
         </div>
         <div className='mt-20 sm:mt-24 lg:mx-0 md:mx-auto md:max-w-2xl lg:w-screen lg:mt-0 '>
           <div className='shadow-lg md:rounded-3xl relative isolate overflow-hidden'>
-            <div className='bg-yellow-500 [clip-path:inset(0)] md:[clip-path:inset(0_round_theme(borderRadius.3xl))]'>
+            <div className='bg-blue-500 [clip-path:inset(0)] md:[clip-path:inset(0_round_theme(borderRadius.3xl))]'>
               <div
-                className='absolute -inset-y-px -z-10 ml-40 w-[200%] bg-yellow-100 opacity-20 ring-1 ring-inset ring-white '
+                className='absolute -inset-y-px -z-10 ml-40 w-[200%] bg-blue-100 opacity-20 ring-1 ring-inset ring-white '
                 aria-hidden='true'
               />
               <div className='relative px-6 pt-8 sm:pt-16 md:pl-16 md:pr-0'>
@@ -60,64 +61,54 @@ export default function MainPage() {
                     <div className='bg-white/40 ring-1 ring-white/5'>
                       <div className='-mb-px flex text-sm font-medium leading-6 text-gray-400'>
                         <div className='border-b border-r border-b-white/20 border-r-white/10 bg-white/5 py-2 px-4 text-white'>
-                          main.wasp
+                          faraDosar.tsx
                         </div>
-                        <div className='border-r border-gray-600/10 py-2 px-4'>App.tsx</div>
+                        <div className='border-r border-gray-600/10 py-2 px-4'>mailFurios.tsx</div>
                       </div>
                     </div>
                     <div className='px-6 pt-6 pb-14 bg-gray-100'>
                       <code className='language-javascript' style={{ whiteSpace: 'pre' }}>
-                        <span>{'app todoApp {'}</span>
+                        <span style={{ color: '#a0a1a7', fontStyle: 'italic' }}>/* Completezi, generezi și trimiți! */</span>
                         <br />
                         <span>{'  '}</span>
-                        <span style={{ color: '#986801' }}>title</span>
+                        <span>{'app eliminaBirocratia() {'}</span>
+                        <br />
+                        <span>{'  '}</span>
+                        <span style={{ color: '#986801' }}>dosarȘină</span>
                         <span>: </span>
-                        <span style={{ color: '#50a14f' }}>"ToDo App"</span>
+                        <span style={{ color: '#50a14f' }}>"null"</span>
                         <span>, </span>
-                        <span style={{ color: '#a0a1a7', fontStyle: 'italic' }}>/* visible in the browser tab */</span>
+                        <span style={{ color: '#a0a1a7', fontStyle: 'italic' }}>/* dosarul cu șină a dispărut */</span>
                         <br />
                         <span>{'  '}</span>
-                        <span style={{ color: '#986801' }}>auth</span>
-                        <span>{': {'} </span>
-                        <span style={{ color: '#a0a1a7', fontStyle: 'italic' }}>
-                          /* full-stack auth out-of-the-box */
-                        </span>
+                        <span style={{ color: '#986801' }}>timpPierdut</span>
+                        <span>: </span>
+                        <span style={{ color: '#50a14f' }}>"minim"</span>
+                        <span>, </span>
+                        <span style={{ color: '#a0a1a7', fontStyle: 'italic' }}>/* ajutor cu PDFurile */</span>
                         <br />
                         <span>{'  '}</span>
-                        <span style={{ color: '#986801' }}>userEntity</span>
-                        <span>: User,</span>
+                        <span style={{ color: '#986801' }}>nervi</span>
+                        <span>: </span>
+                        <span style={{ color: '#50a14f' }}>"mai puțini"</span>
+                        <span>, </span>
                         <br />
-                        <span>{'  '}</span>
-                        <span style={{ color: '#986801' }}>externalAuthEntity</span>
-                        <span>: SocialLogin,</span>
-                        <br />
-                        <span>{'  '}</span>
-                        <span style={{ color: '#986801' }}>methods</span>
-                        <span>{': {'}</span>
-                        <br />
-                        <span>{'    '}</span>
-                        <span style={{ color: '#986801' }}>google</span>
-                        <span>{': {}'}</span>
-                        <br></br>
-                        {'  }'}
-                        <br></br>
-                        {'}'}
                         {/* */}
                         <br />
                         {/* */}
                         <br />
-                        <span>{'route RootRoute { '}</span>
+                        <span>{'route European { '}</span>
                         <span style={{ color: '#986801' }}>path</span>
                         <span>: </span>
                         <span style={{ color: '#50a14f' }}>'/'</span>
                         <span>, </span>
                         <span style={{ color: '#986801' }}>to</span>
-                        <span>{': MainPage }'}</span>
+                        <span>{': Digitalizare }'}</span>
                         <br />
-                        {'page MainPage {'}
+                        {'page GhișeulDigital {'}
                         <span> </span>
                         <span style={{ color: '#a0a1a7', fontStyle: 'italic' }}>
-                          {'/* Only logged in users can access this. */'}
+                          {'/* Accesibil tuturor. */'}
                         </span>
                         <span></span>
 
@@ -132,10 +123,7 @@ export default function MainPage() {
                         <span style={{ color: '#986801' }}>component</span>
                         <span>: </span>
                         <span style={{ color: '#a626a4' }}>import</span>
-                        <span> Main </span>
-                        <span style={{ color: '#a626a4' }}>from</span>
-                        <span> </span>
-                        <span style={{ color: '#50a14f' }}>'@client/Main.jsx'</span>
+                        <span> Digitalizare </span>
                         <br />
                         <span></span>
                         {'}'}

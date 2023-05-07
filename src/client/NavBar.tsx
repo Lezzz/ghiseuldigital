@@ -25,26 +25,26 @@ export default function NavBar() {
                 </div>
                 <div className='hidden sm:ml-6 sm:flex sm:space-x-8'>
                   <a href='/' className={current === '/' ? active : inactive}>
-                    Landing Page
+                    Acasă
                   </a>
                   <a href='/pricing' className={current.includes('pricing') ? active : inactive}>
-                    Pricing
+                    Preț
                   </a>
                   <a href='/gpt' className={current.includes('gpt') ? active : inactive}>
-                    GPT
+                    consilierGPT
                   </a>
                 </div>
               </div>
               <div className='hidden sm:ml-6 sm:flex sm:space-x-8'>
                 <a href={!!user ? '/account' : '/login'} className={current === '/account' ? active : inactive}>
                   <AiOutlineUser className='h-6 w-6 mr-2' />
-                  Account
+                  Cont
                 </a>
               </div>
               <div className='-mr-2 flex items-center sm:hidden'>
                 {/* Mobile menu */}
                 <Disclosure.Button className='inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-300'>
-                  <span className='sr-only'>Open menu</span>
+                  <span className='sr-only'>Meniu</span>
                   {open ? (
                     <AiOutlineClose className='block h-6 w-6' aria-hidden='true' />
                   ) : (
@@ -62,29 +62,39 @@ export default function NavBar() {
                 href='/'
                 className='block border-l-4 border-indigo-300 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-500'
               >
-                Landing Page
+                Acasă
               </Disclosure.Button>
               <Disclosure.Button
                 as='a'
                 href='/pricing'
                 className='block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
               >
-                Pricing
+                Preț
               </Disclosure.Button>
               <Disclosure.Button
                 as='a'
                 href='/gpt'
                 className='block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'
               >
-                GPT
+                consilierGPT
               </Disclosure.Button>
+              {user ? (
               <Disclosure.Button
                 as='a'
                 href='/account'
                 className='block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800'
               >
-                Account
+                Cont
               </Disclosure.Button>
+              )   :   (
+                <Disclosure.Button
+                as='a'
+                href='/login'
+                className='block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800'
+              >
+                Cont
+              </Disclosure.Button>
+              )}
             </div>
           </Disclosure.Panel>
         </>

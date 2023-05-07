@@ -4,21 +4,21 @@ import { useState } from 'react';
 
 const prices = [
   {
-    name: 'Credits',
+    name: 'Credite',
     id: 'credits',
     href: '',
-    price: '$2.95',
-    description: 'Buy credits to use for your projects.',
-    features: ['10 credits', 'Use them any time', 'No expiration date'],
+    price: 'RON10',
+    description: 'Cumpără credite pentru generări.',
+    features: ['50 de credite', 'Folosește-le oricând', 'Nu expiră'],
     disabled: true,
   },
   {
-    name: 'Monthly Subscription',
+    name: 'Abonament lunar',
     id: 'monthly',
     href: '#',
-    priceMonthly: '$9.99',
-    description: 'Get unlimited usage for your projects.',
-    features: ['Unlimited usage of all features', 'Priority support', 'Cancel any time'],
+    priceMonthly: 'RON50',
+    description: 'Obține generări nelimitate.',
+    features: ['Toate funcțiile accesibile nelimitat.', 'Suport prioritar', 'Renunță oricând'],
   },
 ];
 
@@ -78,9 +78,9 @@ export default function PricingPage() {
                 disabled={price.disabled}
                 className={`${
                   price.disabled && 'disabled:opacity-25 disabled:cursor-not-allowed'
-                } mt-8 block rounded-md bg-yellow-400 px-3.5 py-2 text-center text-sm font-semibold leading-6 text-black shadow-sm hover:bg-yellow-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600`}
+                } mt-8 block rounded-md bg-blue-400 px-3.5 py-2 text-center text-sm font-semibold leading-6 text-black shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
               >
-                {isLoading ? 'Loading...' : 'Buy Now'}
+                {isLoading ? 'Se încarcă...' : 'Cumpără acum'}
               </button>
             </div>
           ))}
