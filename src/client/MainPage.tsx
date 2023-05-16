@@ -33,7 +33,7 @@ export default function MainPage() {
                   Generator cererei 544
                 </a>
                 <a
-                  href='/'
+                  href='/gen544'
                   className='rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 hover:text-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500'
                 >
                   Generator autorizație protest

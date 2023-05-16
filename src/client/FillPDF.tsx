@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import React from 'react';
 import { degrees, PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import pdfTemplate from './static/with_update_sections.pdf';
 
 const PdfComponent: React.FC = () => {
 
@@ -13,7 +14,7 @@ const PdfComponent: React.FC = () => {
   } = useForm();
 
   const fillPdf = async () => {
-    const url = 'https://pdf-lib.js.org/assets/with_update_sections.pdf'
+    const url = pdfTemplate
     const response = await fetch(url)
     const existingPdfBytes = await response.arrayBuffer()
 
@@ -26,10 +27,9 @@ const PdfComponent: React.FC = () => {
     firstPage.drawText(inputValue, {
       x: 5,
       y: height / 2 + 300,
-      size: 50,
+      size: 12,
       font: helveticaFont,
-      color: rgb(0.95, 0.1, 0.1),
-      rotate: degrees(-45),
+      color: rgb(0, 0, 0),
     })
 
     const pdfBytes = await pdfDoc.save()
@@ -75,7 +75,7 @@ const PdfComponent: React.FC = () => {
                   isSubmitting && 'animate-puls'
                 } rounded-md bg-blue-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
               >
-                {!isSubmitting ? 'Modify and Download PDF' : 'Loading...'}
+                {!isSubmitting ? 'Generează cerere' : 'Se încarcă...'}
               </button>
             </div>
           </form>

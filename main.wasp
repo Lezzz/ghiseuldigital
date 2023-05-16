@@ -152,6 +152,11 @@ page FillPDF {
   component: import FillPDF from "@client/FillPDF"
 }
 
+route Gen544 { path: "/gen544", to: Gen544 }
+page Gen544 {
+  component: import Gen544 from "@client/Gen544"
+}
+
 route PricingRoute { path: "/pricing", to: PricingPage }
 page PricingPage {
   component: import Pricing from "@client/PricingPage"
