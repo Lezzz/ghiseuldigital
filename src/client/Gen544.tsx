@@ -158,12 +158,11 @@ export default function PdfFillerPage() {
         const plainText3 = 'Vă mulțumesc pentru solicitudine,';
         const splitPlainText3 = docRef.current.splitTextToSize(plainText3, width);
         docRef.current.text(splitPlainText3, paddingLeft, yPosition);
-        yPosition += lineHeight;
     
         // Add the signature
         const signatureHeight = addSignatureIfNeeded(yPosition);
         if (signatureHeight > 0) {
-            yPosition += signatureHeight + 3;
+            yPosition += signatureHeight;
         }
         docRef.current.setFont('Roboto-Italic', 'italic');
         docRef.current.setFontSize(8);
