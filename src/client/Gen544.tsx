@@ -1,54 +1,82 @@
 import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { jsPDF } from 'jspdf';
-import SignaturePad from 'react-signature-canvas';
+import SignatureCanvas from 'react-signature-canvas';
 import 'react-datepicker/dist/react-datepicker.css';
+import './static/fonts/Roboto-Regular-normal.ts';
+import './static/fonts/Roboto-Bold-bold.ts';
+import './static/fonts/Roboto-Italic-italic.ts';
+
 
 
 export default function PdfFillerPage() {
-    const [response, setResponse] = useState<string>('');
-    const [sigPad, setSigPad] = useState<any | null>(null);
-    const docRef = useRef(null);
-    const { register, watch, setValue, handleSubmit, formState: { errors: formErrors, isSubmitting } } = useForm(); // combined useForm() calls here
-    const selectedDate = watch('selectedDate'); // Get the current value of the
-  
-    useEffect(() => {
-      register('selectedDate'); // Register custom input
-      }, [register]);
+  const [response, setResponse] = useState<string>('');
+  const sigPad = useRef<any>(null);  // Ref for SignatureCanvas
+  const docRef = useRef(null);
+  const { register, watch, setValue, handleSubmit, formState: { errors: formErrors, isSubmitting } } = useForm(); // combined useForm() calls here
+  const selectedDate = watch('selectedDate'); // Get the current value of the
+  const delivery = watch('delivery');
+  const [signatureData, setSignatureData] = useState<string | null>(null);
 
-  const clear = () => {
-    if (sigPad) {
-      sigPad.clear();
-    }
-  }
+  useEffect(() => {
+    register("selectedDate"); // Register custom input
+  }, [register]);
 
-  const updateSignature = (yPosition) => {
-    if (sigPad && docRef.current) {
-      const imgData = sigPad.toDataURL('image/png');
+  const addSignatureIfNeeded = (yPosition) => {
+    if (sigPad.current && !sigPad.current.isEmpty()) {
+      const imgData = sigPad.current.toDataURL('image/png');
       const signatureHeight = 50;
       docRef.current.addImage(imgData, 'PNG', 10, yPosition, 50, signatureHeight);
+      setSignatureData(imgData); // Save the signature data
+  
+      // Save the signature data to local storage
+      localStorage.setItem('signatureData', imgData);
+  
       return signatureHeight;
     }
     return 0;
   };
-
-  const onSubmit = async ({ sediu, denumireInst, delivery, address, stimabile, solicitare, title }) => {
+      
+  useEffect(() => {
+    if (!sigPad.current) {
+      return;
+    }
+  
+    // Check if there is signature data in local storage
+    const savedSignatureData = localStorage.getItem('signatureData');
+  
+    if (savedSignatureData) {
+      // If there is, load the data into the signature pad
+      sigPad.current.fromDataURL(savedSignatureData);
+    }
+  }, []);
+  
+  // Clear both local state and local storage
+  const clear = () => {
+    if (sigPad.current) {
+      sigPad.current.clear();
+      setSignatureData(null);
+      localStorage.removeItem('signatureData');
+    }
+  };
+  
+  const onSubmit = async ({ sediu, denumireInst, delivery, address, stimabile, solicitare, title, numeprenume, profesie, telefon, format }) => {
     try {
       docRef.current = new jsPDF();
-  
+
       const lineHeight = 5;
       const paddingLeft = 20;
       const paddingRight = 20;
       const width = docRef.current.internal.pageSize.getWidth() - paddingLeft - paddingRight;
   
       // Define your headline text
-      const headline = "Cerere legea 544/2001";
+      const headline = "Cerere Legea 544/2001";
   
       let yPosition = 20;
   
       // Set font size and style for the headline
       docRef.current.setFontSize(24); // set the font size to 24
-      docRef.current.setFont('Times-Roman', 'bold'); // set the font style to bold
+      docRef.current.setFont('Roboto-Bold', 'bold'); // set the font style to bold
   
       // Get the page width and calculate the center x position
       const pageWidth = docRef.current.internal.pageSize.getWidth();
@@ -80,17 +108,17 @@ export default function PdfFillerPage() {
 
         // Add the selected date to the PDF
         const date = new Date(selectedDate);
-        const dateText = `Data: ${date.toLocaleDateString()}`;
+        const dateText = `${date.toLocaleDateString()}`;
         docRef.current.text(dateText, paddingLeft, yPosition);
         yPosition += lineHeight;
 
-        docRef.current.setFont('Times-Roman', 'normal'); // set the font style to normal
+        docRef.current.setFont('Roboto-Regular', 'normal'); // set the font style to normal
 
         // Increment the yPosition for the next elements
       yPosition += lineHeight * 2; // Adjust this value according to your needs
 
       // Replace the static text with the title variable
-      docRef.current.text(`${title} ${stimabile}`, paddingLeft, yPosition);
+      docRef.current.text(`${title} ${stimabile},`, paddingLeft, yPosition);
       yPosition += splitStimabile.length * lineHeight;
 
       // Add a new section of plain text
@@ -112,29 +140,69 @@ export default function PdfFillerPage() {
       docRef.current.text(splitPlainText2, paddingLeft, yPosition);
       yPosition += splitPlainText2.length * lineHeight;
 
-      // Append delivery and address with proper spacing
-      const deliveryAndAddress = `${delivery}, la adresa: ${address}`;
+      // Conditionally append delivery, format, and address with proper spacing
+      const deliveryAndAddress = delivery === 'Prin e-mail, în format editabil' && format
+        ? `${delivery} ${format}, la adresa: ${address}`
+        : `${delivery}, la adresa: ${address}`;
       const splitDeliveryAndAddress = docRef.current.splitTextToSize(deliveryAndAddress, width);
-  
+
       // Add the deliveryAndAddress text and then increment the yPosition
       docRef.current.text(splitDeliveryAndAddress, paddingLeft, yPosition);
       yPosition += splitDeliveryAndAddress.length * lineHeight;
 
+      yPosition += lineHeight;
 
-        // Add a new section of plain text
-        const plainText3 = 'Vă mulțumesc pentru solicitudine,'; // Replace this with your actual plain text
+
+      if (sigPad.current && !sigPad.current.isEmpty()) {
+        // Add the plain text related to the signature
+        const plainText3 = 'Vă mulțumesc pentru solicitudine,';
         const splitPlainText3 = docRef.current.splitTextToSize(plainText3, width);
         docRef.current.text(splitPlainText3, paddingLeft, yPosition);
-        yPosition += splitPlainText3.length * lineHeight;
-      // Call the updateSignature function and increment yPosition
-      const signatureHeight = updateSignature(yPosition);
-      yPosition += signatureHeight + lineHeight;
-
-        // Add a new section of plain text
-        const plainText4 = 'semnătura petentului'; // Replace this with your actual plain text
+        yPosition += lineHeight;
+    
+        // Add the signature
+        const signatureHeight = addSignatureIfNeeded(yPosition);
+        if (signatureHeight > 0) {
+            yPosition += signatureHeight + 3;
+        }
+        docRef.current.setFont('Roboto-Italic', 'italic');
+        docRef.current.setFontSize(8);
+        const plainText4 = 'semnătura petentului';
         const splitPlainText4 = docRef.current.splitTextToSize(plainText4, width);
         docRef.current.text(splitPlainText4, paddingLeft, yPosition);
         yPosition += splitPlainText4.length * lineHeight;
+        docRef.current.setFont('Roboto-Regular', 'normal');
+        docRef.current.setFontSize(12);
+    } else {
+        const plainTextNoSignature = 'Vă mulțumesc pentru solicitudine,';
+        const splitPlainTextNoSignature = docRef.current.splitTextToSize(plainTextNoSignature, width);
+        docRef.current.text(splitPlainTextNoSignature, paddingLeft, yPosition);
+        yPosition += splitPlainTextNoSignature.length * lineHeight;
+    }
+
+      yPosition += lineHeight * 3;
+      docRef.current.setFontSize(10);
+      docRef.current.setFont('Roboto-Italic', 'italic');
+      
+      const splitNume = docRef.current.splitTextToSize(numeprenume, width);
+      docRef.current.text(splitNume, paddingLeft, yPosition);
+      yPosition += splitNume.length * lineHeight;
+      
+      const splitAdresa = docRef.current.splitTextToSize(address, width);
+      docRef.current.text(splitAdresa, paddingLeft, yPosition);
+      yPosition += splitAdresa.length * lineHeight;
+      
+      if (profesie) {
+        const splitProfesie = docRef.current.splitTextToSize(profesie, width);
+        docRef.current.text(splitProfesie, paddingLeft, yPosition);
+        yPosition += splitProfesie.length * lineHeight;
+      }
+      
+      if (telefon) {
+        const splitTelefon = docRef.current.splitTextToSize(telefon, width);
+        docRef.current.text(splitTelefon, paddingLeft, yPosition);
+        yPosition += splitTelefon.length * lineHeight;
+      }
 
 
   
@@ -153,20 +221,20 @@ export default function PdfFillerPage() {
             <div className='space-y-6 sm:w-[90%] md:w-[60%] mx-auto border-b border-gray-900/10 px-6 pb-12'>
             <div className='col-span-full'>
                 <label htmlFor='denumireInst' className='block text-sm font-medium leading-6 text-gray-900'>
-                  Denumirea instituției:
+                  Denumirea autorității sau instituției publice:
                 </label>
                 <div className='mt-2'>
                 <input
                     id='denumireInst'
                     type='text'
-                    placeholder='Ce acte am nevoie pentru a obține un buletin în Brașov?'
+                    placeholder='Ministerul Educatiei'
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
                     {...register('denumireInst', {
                     required: 'Completează aici',
                     minLength: {
-                        value: 5,
-                        message: 'Minim 5 caractere',
+                        value: 3,
+                        message: 'Minim 3 caractere',
                     },
                     })}
                 />
@@ -180,7 +248,7 @@ export default function PdfFillerPage() {
                 <div className='mt-2'>
                   <textarea
                     id='sediu'
-                    placeholder='Vreau să te comporți ca un funcționar public și să mă îndrumi.'
+                    placeholder='Strada General H. M. Berthelot 28-30'
                     rows={3}
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
@@ -199,7 +267,7 @@ export default function PdfFillerPage() {
               </div>
               <div className='col-span-full'>
             <label htmlFor='selectedDate' className='block text-sm font-medium leading-6 text-gray-900'>
-                Select a Date:
+                Data:
             </label>
             <div className='mt-2'>
                 <input
@@ -207,7 +275,7 @@ export default function PdfFillerPage() {
                 type='date'
                 className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                 {...register('selectedDate', {
-                    required: 'Select a date',
+                    required: 'Alege o dată',
                 })}
                 />
             </div>
@@ -220,19 +288,16 @@ export default function PdfFillerPage() {
                   Cui ne adresăm?
                 </label>
                 <div className='w-1/2 pr-2'>
-                <label htmlFor='title' className='block text-sm font-medium leading-6 text-gray-900'>
-                Titlu:
-                </label>
                 <select
                 id='title'
                 className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                 {...register('title', {
-                    required: 'Select a title method',
+                    required: 'Selectează un titlu.',
                 })}
                 >
-                <option value=''>Select...</option>
-                <option value='Stimabile domn'>Domnul</option>
-                <option value='Stimabile doamna'>Doamna</option>
+                <option value=''>Alege...</option>
+                <option value='Stimabile domn'>Stimabile domn</option>
+                <option value='Stimabilă doamnă'>Stimabilă doamnă</option>
                 </select>
                 <span className='text-sm text-red-500'>
                 {formErrors.delivery && formErrors.delivery.message}
@@ -242,7 +307,7 @@ export default function PdfFillerPage() {
                 <input
                     id='stimabile'
                     type='text'
-                    placeholder='Ce acte am nevoie pentru a obține un buletin în Brașov?'
+                    placeholder='Anamaria Prodan, Ministrul Educației'
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
                     {...register('stimabile', {
@@ -259,12 +324,12 @@ export default function PdfFillerPage() {
 
               <div className='col-span-full'>
                 <label htmlFor='solicitare' className='block text-sm font-medium leading-6 text-gray-900'>
-                  Datele solicitate:
+                  Informațiile sau documentele solicitate:
                 </label>
                 <div className='mt-2'>
                   <textarea
                     id='solicitare'
-                    placeholder='Vreau să te comporți ca un funcționar public și să mă îndrumi.'
+                    placeholder='Numărul total de școli din județul Mehedinți.'
                     rows={3}
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
@@ -284,18 +349,17 @@ export default function PdfFillerPage() {
 
               <div className='col-span-full'>
                 <label htmlFor='signature' className='block text-sm font-medium leading-6 text-gray-900'>
-                Semnătura
+                Semnătura:
                 </label>
-                <SignaturePad 
+                <SignatureCanvas 
                 penColor='black'
-                backgroundColor='rgba(0,0,0,0)'
+                ref={sigPad}
                 canvasProps={{
-                    className: 'sigCanvas block w-full rounded-md border-0 text-gray-900 items-center shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6', 
-                    style: {width: '290px', height: '290px'}
-                }} 
-                ref={(ref) => { setSigPad(ref) }} 
-                onEnd={updateSignature}
-                />
+                  width: 250,
+                  height: 250,
+                  className: 'sigCanvas rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600'
+                }}
+              />
             </div>
             <div>
                 <button
@@ -305,61 +369,142 @@ export default function PdfFillerPage() {
                 } rounded-md bg-blue-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
                 onClick={clear}
                 >
-                Clear
+                Șterge
                 </button>
                 </div>
-            <div className='flex justify-between items-center'>
-            <div className='w-1/2 pr-2'>
-                <label htmlFor='delivery' className='block text-sm font-medium leading-6 text-gray-900'>
-                Delivery Method:
-                </label>
-                <select
-                id='delivery'
-                className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
-                {...register('delivery', {
-                    required: 'Select a delivery method',
-                })}
-                >
-                <option value=''>Select...</option>
-                <option value='Prin e-mail'>Prin e-mail</option>
-                <option value='Prin e-mail, în format editabil'>Prin e-mail, în format editabil</option>
-                <option value='În format fizic'>În format fizic</option>
-                </select>
-                <span className='text-sm text-red-500'>
-                {formErrors.delivery && formErrors.delivery.message}
-                </span>
-            </div>
+            <div className="col-span-full">
+            <label htmlFor="delivery" className="block text-sm font-medium leading-6 text-gray-900">
+              Doresc ca informațiile să îmi fie furnizate:
+            </label>
+            <select
+            id="delivery"
+            className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+            {...register("delivery", {
+              required: "Alege cum dorești să îți fie livrate informațiile.",
+            })}
+          >
+            <option value="">Alege...</option>
+            <option value="Prin e-mail">Prin e-mail</option>
+            <option value="Prin e-mail, în format editabil">Prin e-mail, în format editabil</option>
+            <option value="În format de hârtie">În format de hârtie</option>
+          </select>
 
-            <div className='w-1/2 pl-2'>
+            <span className="text-sm text-red-500">
+              {formErrors.delivery && formErrors.delivery.message}
+            </span>
+
+            {delivery === "Prin e-mail, în format editabil" && (
+            <div className="mt-2">
+              <label htmlFor="format" className="block text-sm font-medium leading-6 text-gray-900">
+                Alege formatul editabil:
+              </label>
+              <select
+                id="format"
+                className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+                {...register("format")}
+              >
+                <option value="">Alege...</option>
+                <option value="Word">Word</option>
+                <option value="PDF">PDF</option>
+              </select>
+            </div>
+          )}
+
+          </div>
+
+            <div className='col-span-full'>
                 <label htmlFor='address' className='block text-sm font-medium leading-6 text-gray-900'>
-                Delivery Address:
+                Adresa pentru livrarea informațiilor:
                 </label>
                 <input
                 id='address'
                 type='text'
-                placeholder='Enter delivery address'
+                placeholder='exemplu@mail.ro'
                 className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                 {...register('address', {
-                    required: 'Enter delivery address',
+                    required: 'Introdu adresa de livrare.',
                 })}
                 />
                 <span className='text-sm text-red-500'>
                 {formErrors.address && formErrors.address.message}
                 </span>
             </div>
-            </div>
+            <div className='col-span-full'>
+                <label htmlFor='numeprenume' className='block text-sm font-medium leading-6 text-gray-900'>
+                  Nume și Prenume:
+                </label>
+                <div className='mt-2'>
+                <input
+                    id='numeprenume'
+                    type='text'
+                    placeholder='Donovan Apostolescu'
+                    className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
+                    defaultValue={''}
+                    {...register('numeprenume', {
+                    required: 'Completează aici',
+                    minLength: {
+                        value: 5,
+                        message: 'Minim 5 caractere',
+                    },
+                    })}
+                />
+                </div>
+                <span className='text-sm text-red-500'>{formErrors.denumireInst && formErrors.denumireInst.message}</span>
+              </div>
+              <div className='col-span-full'>
+                <label htmlFor='profesie' className='block text-sm font-medium leading-6 text-gray-900'>
+                  Profesie (opțional):
+                </label>
+                <div className='mt-2'>
+                <input
+                    id='profesie'
+                    type='text'
+                    placeholder='Sculer Matrițer'
+                    className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
+                    defaultValue={''}
+                    {...register('profesie', {
+                    minLength: {
+                        value: 5,
+                        message: 'Minim 5 caractere',
+                    },
+                    })}
+                />
+                </div>
+                <span className='text-sm text-red-500'>{formErrors.denumireInst && formErrors.denumireInst.message}</span>
+              </div>
+              <div className='col-span-full'>
+                <label htmlFor='telefon' className='block text-sm font-medium leading-6 text-gray-900'>
+                  Telefon (opțional):
+                </label>
+                <div className='mt-2'>
+                <input
+                    id='telefon'
+                    type='text'
+                    placeholder='0712345678'
+                    className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
+                    defaultValue={''}
+                    {...register('telefon', {
+                    minLength: {
+                        value: 5,
+                        message: 'Minim 5 caractere',
+                    },
+                    })}
+                />
+                </div>
+                <span className='text-sm text-red-500'>{formErrors.denumireInst && formErrors.denumireInst.message}</span>
+              </div>
 
             </div>
             <div className='mt-6 flex justify-end gap-x-6 sm:w-[90%] md:w-[50%] mx-auto'>
-              <button
-                type='submit'
-                className={`${
-                  isSubmitting && 'animate-puls'
-                } rounded-md bg-blue-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
-              >
-                {!isSubmitting ? 'Întreabă' : 'Loading...'}
-              </button>
-            </div>
+            <button
+              type='submit'
+              className={`${
+                isSubmitting && 'animate-puls'
+              } w-full rounded-md bg-blue-500 py-2 px-3 text-base font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+            >
+              {!isSubmitting ? 'Generează cererea' : 'Loading...'}
+            </button>
+          </div>
           </form>
           <div
             className={`mt-2 mx-6 flex justify-center rounded-lg border border-dashed border-gray-900/25 mt-10 sm:w-[90%] md:w-[50%] mx-auto mt-12 px-6 py-10`}
@@ -368,7 +513,7 @@ export default function PdfFillerPage() {
             <p className='text-sm text-gray-500'>
                 {response ? (
                 <a href={response} download='filled_pdf.pdf'>
-                    Descarcă PDF-ul
+                    Click aici pentru a descărca cererea în format PDF.
                 </a>
                 ) : (
                 'Răspunsul se va încărca aici.'
