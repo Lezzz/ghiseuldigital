@@ -122,7 +122,7 @@ export default function PdfFillerPage() {
       yPosition += splitStimabile.length * lineHeight;
 
       // Add a new section of plain text
-      const plainText = 'Prin prezenta formulez o cerere conform Legii nr. 544/2001 privind liberul acces la informațiile de interes public, cu modificările și completările ulterioare. Doresc să primesc o copie de pe următoarele documente (petentul este rugat să enumere cât mai concret documentele sau informațiile solicitate):'; // Replace this with your actual plain text
+      const plainText = 'Prin prezenta formulez o cerere conform Legii nr. 544/2001 privind liberul acces la informațiile de interes public, cu modificările și completările ulterioare. Doresc să primesc o copie a următoarelor documente sau informații:'; // Replace this with your actual plain text
       const splitPlainText = docRef.current.splitTextToSize(plainText, width);
       docRef.current.text(splitPlainText, paddingLeft, yPosition);
       yPosition += splitPlainText.length * lineHeight;
@@ -226,7 +226,7 @@ export default function PdfFillerPage() {
                 <input
                     id='denumireInst'
                     type='text'
-                    placeholder='Ministerul Educatiei'
+                    placeholder='Ministerul Educației'
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
                     {...register('denumireInst', {
@@ -306,7 +306,7 @@ export default function PdfFillerPage() {
                 <input
                     id='stimabile'
                     type='text'
-                    placeholder='Anamaria Prodan, Ministrul Educației'
+                    placeholder='Ligia Deca, Ministrul Educației'
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
                     {...register('stimabile', {
@@ -323,12 +323,12 @@ export default function PdfFillerPage() {
 
               <div className='col-span-full'>
                 <label htmlFor='solicitare' className='block text-sm font-medium leading-6 text-gray-900'>
-                  Informațiile sau documentele solicitate:
+                  Informațiile sau documentele solicitate (cât mai detaliat):
                 </label>
                 <div className='mt-2'>
                   <textarea
                     id='solicitare'
-                    placeholder='Numărul total de școli din județul Mehedinți.'
+                    placeholder='Exemplu: Numărul total de școli din județul Mehedinți.'
                     rows={3}
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
@@ -348,7 +348,7 @@ export default function PdfFillerPage() {
 
               <div className='col-span-full'>
                 <label htmlFor='signature' className='block text-sm font-medium leading-6 text-gray-900'>
-                Semnătura:
+                Semnătura (opțional):
                 </label>
                 <SignatureCanvas 
                 penColor='black'
@@ -436,7 +436,7 @@ export default function PdfFillerPage() {
                 <input
                     id='numeprenume'
                     type='text'
-                    placeholder='Donovan Apostolescu'
+                    placeholder='Andrei Mihai'
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
                     {...register('numeprenume', {
@@ -458,7 +458,7 @@ export default function PdfFillerPage() {
                 <input
                     id='profesie'
                     type='text'
-                    placeholder='Sculer Matrițer'
+                    placeholder='Profesor'
                     className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
                     defaultValue={''}
                     {...register('profesie', {
