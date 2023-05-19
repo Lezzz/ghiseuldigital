@@ -72,11 +72,10 @@ export const stripePayment: StripePayment<void, StripePaymentResult> = async (_a
 type GptPayload = {
   instructions: string;
   command: string;
-  temperature: number;
 };
 
 export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject> = async (
-  { instructions, command, temperature },
+  { instructions, command },
   context
 ) => {
   if (!context.user) {
@@ -95,7 +94,6 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
         content: command,
       },
     ],
-    temperature: Number(temperature),
   };
 
   try {

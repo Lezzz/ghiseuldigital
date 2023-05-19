@@ -11,17 +11,31 @@ type GptPayload = {
 
 export default function GptPage() {
   const [response, setResponse] = useState<string>('');
+  
+  const personalities = [
+    { label: 'Personality 1', value: 'Prompt 1' },
+    { label: 'Personality 2', value: 'Prompt 2' },
+    { label: 'Personality 3', value: 'Prompt 3' },
+    { label: 'Personality 4', value: 'Prompt 4' },
+    { label: 'Personality 5', value: 'Prompt 5' },
+    { label: 'Personality 6', value: 'Prompt 6' },
+    { label: 'Personality 7', value: 'Prompt 7' },
+    { label: 'Personality 8', value: 'Prompt 8' },
+    { label: 'Personality 9', value: 'Prompt 9' },
+  ];
+
+  const [selectedPersonality, setSelectedPersonality] = useState<string>(personalities[0].value);
 
   const { data: user } = useAuth();
 
-  const onSubmit = async ({ instructions, command }: any) => {
+  const onSubmit = async ({  command }: any) => {
     console.log('user, ', !!user);
     if (!user) {
       alert('You must be logged in to use this feature.');
       return;
     }
     try {
-      const response = (await generateGptResponse({ instructions, command })) as RelatedObject;
+      const response = (await generateGptResponse({ instructions: selectedPersonality, command })) as RelatedObject;
       if (response) {
         setResponse(response.content);
       }
@@ -31,18 +45,7 @@ export default function GptPage() {
     }
   };
 
-  const {
-    handleSubmit,
-    register,
-    reset,
-    formState: { errors: formErrors, isSubmitting },
-  } = useForm();
-
-  const preDefinedPrompts = [
-    { label: 'Label 1', value: 'Prompt 1' },
-    { label: 'Label 2', value: 'Prompt 2' },
-    { label: 'Label 3', value: 'Prompt 3' },
-  ];
+  const { handleSubmit, register, reset, formState: { errors: formErrors, isSubmitting } } = useForm<{ command: string }>();
 
   return (
     <div className='mt-10 px-6'>
@@ -55,22 +58,22 @@ export default function GptPage() {
                   Alege o personalitate:
                 </label>
                 <div className='mt-2'>
-                  <select
-                    id='instructions'
-                    className='block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6'
-                    {...register('instructions', {
-                      required: 'Completează aici',
-                    })}
-                  >
-                    {preDefinedPrompts.map((prompt, index) => (
-                      <option value={prompt.value} key={index}>
-                        {prompt.label}
-                      </option>
-                    ))}
-                  </select>
+                <div className='grid grid-cols-3 gap-4 mt-2'>
+                  {personalities.map((personality, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedPersonality(personality.value)}
+                      className={`block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6 ${
+                        selectedPersonality === personality.value && 'bg-blue-500 text-white'
+                      }`}
+                    >
+                      {personality.label}
+                    </button>
+                  ))}
+                </div>
                 </div>
                 <span className='text-sm text-red-500'>
-                  {formErrors.instructions && formErrors.instructions.message}
+                {formErrors.command && formErrors.command.message}
                 </span>
               </div>
               <div className='col-span-full'>

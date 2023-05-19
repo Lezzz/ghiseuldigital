@@ -147,6 +147,11 @@ page GptPage {
   component: import GptPage from "@client/GptPage"
 }
 
+route GptRouteNine { path: "/gpt9", to: GptPageNine }
+page GptPageNine {
+  component: import GptPageNine from "@client/GptPageNine"
+}
+
 route FillPDF { path: "/pdf", to: FillPDF }
 page FillPDF {
   component: import FillPDF from "@client/FillPDF"
