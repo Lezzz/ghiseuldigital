@@ -190,6 +190,11 @@ action generateGptResponse {
   entities: [User, RelatedObject]
 }
 
+action generateGptResponseNine {
+  fn: import { generateGptResponseNine } from "@server/actions.js",
+  entities: [User, RelatedObject]
+}
+
 action stripePayment {
   fn: import { stripePayment } from "@server/actions.js",
   entities: [User]

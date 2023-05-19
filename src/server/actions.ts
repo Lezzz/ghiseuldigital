@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import HttpError from '@wasp/core/HttpError.js';
 import type { RelatedObject } from '@wasp/entities';
-import type { GenerateGptResponse, StripePayment } from '@wasp/actions/types';
+import type { GenerateGptResponse, GenerateGptResponseNine , StripePayment } from '@wasp/actions/types';
 import type { StripePaymentResult, OpenAIResponse } from './types';
 import Stripe from 'stripe';
 
@@ -74,6 +74,11 @@ type GptPayload = {
   command: string;
 };
 
+type GptPayloadNine = {
+  instructionsNine: string;
+  commandNine: string;
+};
+
 export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject> = async (
   { instructions, command },
   context
@@ -92,6 +97,81 @@ export const generateGptResponse: GenerateGptResponse<GptPayload, RelatedObject>
       {
         role: 'user',
         content: command,
+      },
+    ],
+  };
+
+  try {
+    if (!context.user.hasPaid && !context.user.credits) {
+      throw new HttpError(402, 'User has not paid or is out of credits');
+    } else if (context.user.credits && !context.user.hasPaid) {
+      console.log('decrementing credits');
+      await context.entities.User.update({
+        where: { id: context.user.id },
+        data: {
+          credits: {
+            decrement: 1,
+          },
+        },
+      });
+    }
+
+    console.log('fetching', payload);
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY!}`,
+      },
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+
+    const json = (await response.json()) as OpenAIResponse;
+    console.log('response json', json);
+    return context.entities.RelatedObject.create({
+      data: {
+        content: json?.choices[0].message.content,
+        user: { connect: { id: context.user.id } },
+      },
+    });
+  } catch (error: any) {
+    if (!context.user.hasPaid && error?.statusCode != 402) {
+      await context.entities.User.update({
+        where: { id: context.user.id },
+        data: {
+          credits: {
+            increment: 1,
+          },
+        },
+      });
+    }
+    console.error(error);
+  }
+
+  return new Promise((resolve, reject) => {
+    reject(new HttpError(500, 'Something went wrong'));
+  });
+};
+
+
+export const generateGptResponseNine: GenerateGptResponseNine<GptPayloadNine, RelatedObject> = async (
+  { instructionsNine, commandNine },
+  context
+) => {
+  if (!context.user) {
+    throw new HttpError(401);
+  }
+
+  const payload = {
+    model: 'gpt-3.5-turbo',
+    messages: [
+      {
+        role: 'system',
+        content: instructionsNine,
+      },
+      {
+        role: 'user',
+        content: commandNine,
       },
     ],
   };
