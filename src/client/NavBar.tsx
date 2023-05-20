@@ -54,10 +54,10 @@ export default function NavBar() {
                   <a href='/pricing' className={current.includes('pricing') ? active : inactive}>
                     Preț
                   </a>
-                  <a href='/gpt' className={current === 'gpt' ? active : inactive}>
+                  <a href='/gpt' className={current.includes('gpt') ? active : inactive}>
                     consilierGPT
                   </a>
-                  <a href='/gpt9' className={current === 'gpt9' ? active : inactive}>
+                  <a href='/gpt9' className={current.includes('gpt9') ? active : inactive}>
                     NouăGPT
                   </a>
                 </div>

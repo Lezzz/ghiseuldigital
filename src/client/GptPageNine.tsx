@@ -61,17 +61,18 @@ export default function GptPage() {
                 <div className='grid grid-cols-3 gap-4 mt-2'>
                 {personalities.map((personality, index) => (
                     <button
-                        key={index}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setSelectedPersonality(personality.value);
-                        }}
-                        className={`block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6 ${
-                            selectedPersonality === personality.value && 'bg-blue-500 text-white'
-                        }`}
-                    >
-                        {personality.label}
-                    </button>
+                    key={index}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setSelectedPersonality(personality.value);
+                    }}
+                    className={`block w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6 md:px-4 ${
+                        selectedPersonality === personality.value && 'bg-blue-500 text-white'
+                    }`}
+                >
+                    {personality.label}
+                </button>
+                
                 ))}
                 </div>
                 </div>
