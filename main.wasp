@@ -147,6 +147,11 @@ page GptPage {
   component: import GptPage from "@client/GptPage"
 }
 
+route GptRouteEmbed { path: "/gptembed", to: GptPageEmbed }
+page GptPageEmbed {
+  component: import GptPageEmbed from "@client/GptPageEmbed"
+}
+
 route GptRouteNine { path: "/gpt9", to: GptPageNine }
 page GptPageNine {
   component: import GptPageNine from "@client/GptPageNine"
